@@ -2,22 +2,37 @@
 <html>
 
 <head>
-<title>Click Speed Game</title>
+<title>Mouse Performance Tester</title>
 
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 text-align:center;
-margin-top:100px;
-background:#111;
+background:#0f0f0f;
 color:white;
+margin-top:80px;
 }
 
 button{
 padding:20px;
-font-size:20px;
+font-size:22px;
 cursor:pointer;
+border:none;
+border-radius:8px;
+background:#00ff9c;
+color:black;
+}
+
+.stats{
+margin-top:20px;
+font-size:18px;
+}
+
+.result{
+margin-top:25px;
+font-size:20px;
+color:#00ff9c;
 }
 
 </style>
@@ -26,57 +41,96 @@ cursor:pointer;
 
 <body>
 
-<h1>Click Speed Game 🎮</h1>
+<h1>Mouse Performance Tester 🖱️</h1>
+<p>Test your gaming mouse speed and responsiveness</p>
 
-<p>Time Left: <span id="time">10</span>s</p>
-<p>Score: <span id="score">0</span></p>
-<p>Last Click Speed: <span id="speed">0</span> ms</p>
+<h2>Time Left: <span id="time">10</span>s</h2>
 
-<button onclick="clickGame()">CLICK ME</button>
+<button onclick="clickTest()">CLICK</button>
 
-<p id="result"></p>
+<div class="stats">
+
+<p>Clicks: <span id="clicks">0</span></p>
+
+<p>Last Response Time: <span id="last">0</span> ms</p>
+
+<p>Fastest Click: <span id="fastest">0</span> ms</p>
+
+<p>Average Response: <span id="avg">0</span> ms</p>
+
+<p>CPS (Clicks per second): <span id="cps">0</span></p>
+
+</div>
+
+<div class="result" id="result"></div>
 
 <script>
 
-let score = 0;
-let timeLeft = 10;
-let lastClick = 0;
-let gameActive = true;
+let clicks = 0
+let timeLeft = 10
+let lastClick = 0
+let fastest = Infinity
+let totalResponse = 0
+let gameActive = true
 
-function clickGame(){
+function clickTest(){
 
-if(!gameActive) return;
+if(!gameActive) return
 
-let now = Date.now();
+let now = performance.now()
 
 if(lastClick !== 0){
-let response = now - lastClick;
-document.getElementById("speed").innerText = response;
+
+let response = now - lastClick
+
+document.getElementById("last").innerText =
+Math.round(response)
+
+if(response < fastest){
+fastest = response
+document.getElementById("fastest").innerText =
+Math.round(fastest)
 }
 
-lastClick = now;
+totalResponse += response
 
-score++;
-document.getElementById("score").innerText = score;
+let avg = totalResponse / clicks
+document.getElementById("avg").innerText =
+Math.round(avg)
+
+}
+
+lastClick = now
+
+clicks++
+
+document.getElementById("clicks").innerText = clicks
+
+let cps = clicks / (10 - timeLeft + 1)
+
+document.getElementById("cps").innerText =
+cps.toFixed(2)
 
 }
 
 let timer = setInterval(function(){
 
-timeLeft--;
-document.getElementById("time").innerText = timeLeft;
+timeLeft--
+
+document.getElementById("time").innerText = timeLeft
 
 if(timeLeft <= 0){
 
-clearInterval(timer);
-gameActive = false;
+clearInterval(timer)
+
+gameActive = false
 
 document.getElementById("result").innerText =
-"Game Over! Your score: " + score;
+"Test Complete! Your CPS: " + (clicks/10).toFixed(2)
 
 }
 
-},1000);
+},1000)
 
 </script>
 

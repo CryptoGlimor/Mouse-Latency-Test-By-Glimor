@@ -7,4 +7,7 @@ Built using:
 - JavaScript
 
 How to play:
-Click the button and increase your score.
+Click the button and increase your score, Test how fast you can click
+
+Play the game Here:
+https://cryptoglimor.github.io/click-game-by-glimor/
